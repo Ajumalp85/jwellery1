@@ -1,0 +1,125 @@
+<div class="w-full py-12 lg:py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-2 mb-10 text-center sm:text-left">
+      <h2 class="text-3xl font-bold tracking-tight text-[#0e191b] dark:text-white sm:text-4xl">
+        {{ section.settings.title }}
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+        {{ section.settings.subtitle }}
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.collection.url | default: '#' }}" class="group relative overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm transition-all hover:shadow-md h-[300px]">
+          <div class="absolute inset-0 bg-gray-200 overflow-hidden">
+            {%- if block.settings.image != blank -%}
+              <img 
+                src="{{ block.settings.image | image_url: width: 800 }}" 
+                alt="{{ block.settings.title | escape }}"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                width="800"
+                height="600"
+              >
+            {%- else -%}
+              <div class="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style="background-image: url('{{ block.settings.fallback_image_url }}');"></div>
+            {%- endif -%}
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-6">
+            <h3 class="text-xl font-bold text-white">{{ block.settings.title }}</h3>
+            <p class="text-sm text-gray-200 mt-1">{{ block.settings.text }}</p>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collections",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Curated Collections"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Explore our handpicked selections, from royal weddings to elegant daily wear."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "fallback_image_url",
+          "label": "Fallback Image URL (from design)",
+          "default": "https://lh3.googleusercontent.com/aida-public/AB6AXuCCQaLHFzED-rngR32oYmRUe1FkIEpvTxlitkwuXn7lN4yrzg1Pwx2zWbG-HPoWqRlKpmZsPkj9l5IG4-3to1DLjjQr8eiwVsOzaRKx4Wl0wLGh3Z4Cp3V3wCVxdl48e30wM4OYh-lyvmuvsrGM7KbVr2BMvgXxG1261WYjX6u4-9uZlLq7ovTAVEeceUGKQ6Eg5vKkxXNkn5PLz76q3yULXLyxF2uwSKpIxKhMZXAZw1lYJIAY3EkiLm9-1cH92Z_Jqx7xevyXKEvE"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Temple Jewellery"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Intricate designs inspired by heritage."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collections",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Temple Jewellery",
+            "text": "Intricate designs inspired by heritage.",
+            "fallback_image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCCQaLHFzED-rngR32oYmRUe1FkIEpvTxlitkwuXn7lN4yrzg1Pwx2zWbG-HPoWqRlKpmZsPkj9l5IG4-3to1DLjjQr8eiwVsOzaRKx4Wl0wLGh3Z4Cp3V3wCVxdl48e30wM4OYh-lyvmuvsrGM7KbVr2BMvgXxG1261WYjX6u4-9uZlLq7ovTAVEeceUGKQ6Eg5vKkxXNkn5PLz76q3yULXLyxF2uwSKpIxKhMZXAZw1lYJIAY3EkiLm9-1cH92Z_Jqx7xevyXKEvE"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Kundan & Polki",
+            "text": "Royal craftsmanship for the bride in you.",
+            "fallback_image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBuBiOTjKo2fw4cYK78TL-SsTEzvRcISEihW7PwX1TK35n1mt8p8jRaIjCVIXy-FThBX-QbOLchdyQbMxXr5BrrOduqUVPbX28lkxbeOnePtNyrbd1fx07hghydAG8ctf8nbVQqeU6HQKSHwiD2salRQiTmXTyXS6d6h0Ocd2i1vu1Q3NI6sAOFpwNFGY6WYDHWC7D48AATwfOzicAMPLRrGk5HCeeKHm3Wd4cTk_a40URIk7UdWQKe8S9GRKIxlfyqv2PaN_1A1bob"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Office & Daily Wear",
+            "text": "Elegant, lightweight fancy items.",
+            "fallback_image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDPywl7pIGgM2o7xSWaldd1tRTMYiaeCng66dYfXqFe7zIzP15fX_Hz_vt8MKwm9eUTVm4BMSnNOMwlCKAv0pN9BuwY0wGv_QhgrPZRQxTQ14shANRWucxPxX57fKA4YMxDid6P1kxTTHu54oQZeYQauuUFGtJp3rRvWf3U9Lp4ACJ1aSAfVw4afkjJZMAAK1ch-TAzPJNT2MtnMqVtNLykYGXXlcN8ZbTCcpEBNnYj-lLCLePfAwPGQXjKtGV18Q8IEjHUrNzuVjsk"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

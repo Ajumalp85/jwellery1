@@ -1,0 +1,26 @@
+{
+    "sections": {
+        "hero": {
+            "type": "hero",
+            "settings": {}
+        },
+        "featured_collections": {
+            "type": "featured-collections",
+            "settings": {}
+        },
+        "deal_of_the_day": {
+            "type": "deal-of-the-day",
+            "settings": {}
+        },
+        "featured_products": {
+            "type": "featured-products",
+            "settings": {}
+        }
+    },
+    "order": [
+        "hero",
+        "featured_collections",
+        "deal_of_the_day",
+        "featured_products"
+    ]
+}

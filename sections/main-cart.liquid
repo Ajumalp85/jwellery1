@@ -1,0 +1,150 @@
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-6 py-8">
+  <nav class="flex items-center gap-2 text-sm mb-8 text-text-secondary dark:text-gray-400">
+    <a class="hover:text-primary transition-colors" href="{{ routes.root_url }}">Home</a>
+    <span class="material-symbols-outlined text-base">chevron_right</span>
+    <span class="font-medium text-[#0e191b] dark:text-white">Shopping Bag</span>
+  </nav>
+
+  {%- if cart.item_count > 0 -%}
+    <div class="flex flex-col lg:flex-row gap-12">
+      <div class="flex-1 flex flex-col gap-6">
+        <div class="flex items-baseline justify-between border-b border-[#e7f1f3] dark:border-[#2a4048] pb-4">
+          <h1 class="text-3xl font-bold dark:text-white">Your Shopping Bag</h1>
+          <span class="text-gray-500 dark:text-gray-400">{{ cart.item_count }} {{ cart.item_count | pluralize: 'Item', 'Items' }}</span>
+        </div>
+
+        <form action="{{ routes.cart_url }}" method="post" id="cart">
+          <div class="flex flex-col gap-6">
+            {%- for item in cart.items -%}
+              <div class="group flex flex-col sm:flex-row gap-6 p-4 bg-white dark:bg-[#1a2c32] rounded-xl border border-[#e7f1f3] dark:border-[#2a4048] hover:shadow-sm transition-shadow">
+                <div class="shrink-0">
+                  <div class="w-full sm:w-32 h-32 rounded-lg bg-gray-100 overflow-hidden">
+                    {%- if item.image -%}
+                      <img src="{{ item.image | image_url: width: 300 }}" alt="{{ item.product.title | escape }}" class="h-full w-full object-cover">
+                    {%- endif -%}
+                  </div>
+                </div>
+                <div class="flex flex-1 flex-col justify-between">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-lg font-bold text-[#0e191b] dark:text-white leading-tight">
+                        <a href="{{ item.url }}">{{ item.product.title }}</a>
+                      </h3>
+                      {%- if item.product.has_only_default_variant == false or item.properties.size != 0 or item.selling_plan_allocation != nil -%}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                          {%- if item.product.has_only_default_variant == false -%}
+                            {%- for option in item.options_with_values -%}
+                              {{ option.name }}: {{ option.value }}{% unless forloop.last %}, {% endunless %}
+                            {%- endfor -%}
+                          {%- endif -%}
+                        </p>
+                      {%- endif -%}
+                    </div>
+                    <p class="text-lg font-bold text-[#0e191b] dark:text-white">{{ item.final_line_price | money }}</p>
+                  </div>
+                  <div class="flex items-center justify-between mt-4">
+                    <div class="flex items-center gap-6">
+                      <div class="flex items-center border border-[#e7f1f3] dark:border-[#2a4048] rounded-lg">
+                        <button type="button" class="px-3 py-1 hover:bg-gray-50 dark:hover:bg-[#23353b] text-gray-500 dark:text-gray-400 transition-colors rounded-l-lg" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); this.closest('form').submit();">-</button>
+                        <input class="w-10 text-center border-none p-0 text-sm font-medium bg-transparent dark:text-white focus:ring-0" type="number" name="updates[]" value="{{ item.quantity }}" min="0" id="updates_{{ item.key }}">
+                        <button type="button" class="px-3 py-1 hover:bg-gray-50 dark:hover:bg-[#23353b] text-gray-500 dark:text-gray-400 transition-colors rounded-r-lg" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); this.closest('form').submit();">+</button>
+                      </div>
+                      <a href="{{ item.url_to_remove }}" class="text-sm font-medium text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1 dark:text-gray-400 dark:hover:text-red-400">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                        Remove
+                      </a>
+                    </div>
+                    <button type="button" class="text-sm font-medium text-primary hover:text-[#1390aa] transition-colors flex items-center gap-1">
+                      <span class="material-symbols-outlined text-lg">favorite</span>
+                      Move to Wishlist
+                    </button>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </form>
+
+        <div class="mt-4 p-5 bg-white dark:bg-[#1a2c32] rounded-xl border border-[#e7f1f3] dark:border-[#2a4048] flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="p-2 bg-primary/10 text-primary rounded-lg">
+              <span class="material-symbols-outlined">card_giftcard</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-[#0e191b] dark:text-white">Add Gift Wrapping</h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Make it special with our premium box & card</p>
+            </div>
+          </div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input class="rounded border-gray-300 text-primary focus:ring-primary w-5 h-5" type="checkbox"/>
+            <span class="font-semibold text-[#0e191b] dark:text-white">₹50</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="w-full lg:w-[380px] shrink-0">
+        <div class="sticky top-24 bg-white dark:bg-[#1a2c32] p-6 rounded-xl border border-[#e7f1f3] dark:border-[#2a4048] shadow-sm">
+          <h2 class="text-xl font-bold mb-6 dark:text-white">Order Summary</h2>
+          <div class="space-y-4 mb-6">
+            <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+              <span>Subtotal</span>
+              <span class="font-medium text-[#0e191b] dark:text-white">{{ cart.total_price | money }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+              <span>Shipping estimate</span>
+              <span class="font-medium text-green-600 dark:text-green-400">Calculated at checkout</span>
+            </div>
+            <div class="pt-2">
+              <div class="flex gap-2">
+                <input class="flex-1 rounded-lg border-[#e7f1f3] dark:border-[#2a4048] dark:bg-[#23353b] dark:text-white text-sm focus:border-primary focus:ring-primary" placeholder="Enter promo code" type="text"/>
+                <button class="px-4 py-2 bg-gray-100 dark:bg-[#23353b] dark:text-white text-[#0e191b] font-semibold text-sm rounded-lg hover:bg-gray-200 dark:hover:bg-[#2a4048] transition-colors">Apply</button>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-[#e7f1f3] dark:border-[#2a4048] pt-4 mb-6">
+            <div class="flex justify-between items-end">
+              <span class="text-base font-bold text-[#0e191b] dark:text-white">Grand Total</span>
+              <div class="text-right">
+                <span class="text-2xl font-black text-[#0e191b] dark:text-white">{{ cart.total_price | money }}</span>
+                <p class="text-xs text-gray-500 dark:text-gray-500">Inclusive of all taxes</p>
+              </div>
+            </div>
+          </div>
+          
+          <form action="/cart" method="post" id="cart-checkout">
+            <button type="submit" name="checkout" class="w-full bg-primary hover:bg-[#1390aa] text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+              Checkout Securely
+              <span class="material-symbols-outlined text-sm">lock</span>
+            </button>
+          </form>
+
+          <div class="mt-6 flex flex-col items-center gap-4">
+            <div class="flex items-center gap-3 opacity-60 grayscale dark:invert">
+              {%- comment -%} Placeholder payment icons {%- endcomment -%}
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv--jjhllLullm-SKZytT1wXvNzXlOyByVMi6XdzEmy7YpBqYM13eKyfpD09rP6SjxMdOV9U73S1TMiYNxn9aBpumlCOPZ-dCoZ3GFt8-GVh5GA3k4ilYeBWNGrbt_X8Xt2fS4iqJ6lYPdbWHsg3Vnu2d2CywNLvUd17oGg6ZzU00F6JRiiJ18rp4NQ-KkVErecnMMwpJxgg3598AMxyQDRR93ZKPZ3bzIgCX3uKjhZjgqHMrf264Kp6CQTJGtiGSreAX4aasGJjk1" alt="UPI" class="h-4">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7d0ZqKugp4Zvf5ewNyeUhnZ-UlJaoI0KAilQREozJjPY084pW5fFmf59UOpKUaS7pTA42fDN3KHDSKBbDB0SRCOD08pF5GjW-Msf_1vIGVKOmhVYPoWnwabYEV0W9lSRobpdPNEcZg49FHK8oU1oqI6URcL0snWqH0KQh5JJZJs-5bzDScyLwlqRV0fZeS95MkADZnKsNN7PvhOYjXioECg45ioXUL97puOsDCBS2skgF_bcNW0NJS2pV6EwadoAqAYjcsW9uNONv" alt="Visa" class="h-3">
+            </div>
+            <div class="flex items-center justify-center gap-4 text-xs text-gray-500">
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified</span> 100% Certified</span>
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">assignment_return</span> 7 Days Return</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="text-center py-20">
+      <h2 class="text-2xl font-bold mb-4">Your bag is empty</h2>
+      <a href="{{ routes.all_products_collection_url }}" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-bold text-white transition-transform hover:scale-105">
+        Continue Shopping
+      </a>
+    </div>
+  {%- endif -%}
+</main>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

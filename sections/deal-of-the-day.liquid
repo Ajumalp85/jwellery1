@@ -1,0 +1,154 @@
+<div class="w-full bg-[#e7f1f3] dark:bg-[#1f3137]">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row gap-10 items-center">
+      <div class="flex-1 space-y-8 text-center lg:text-left">
+        <div class="space-y-4">
+          <span class="text-sm font-bold uppercase tracking-wider text-red-500">{{ section.settings.badge }}</span>
+          <h2 class="text-4xl font-black tracking-tight text-[#0e191b] dark:text-white">{{ section.settings.title }}</h2>
+          <div class="text-lg text-gray-600 dark:text-gray-300">
+            {{ section.settings.text }}
+          </div>
+        </div>
+        
+        <div class="flex gap-4 justify-center lg:justify-start">
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm">
+              <p class="text-2xl font-bold text-primary" id="days">00</p>
+            </div>
+            <span class="text-xs font-medium uppercase text-gray-500">Days</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm">
+              <p class="text-2xl font-bold text-primary" id="hours">04</p>
+            </div>
+            <span class="text-xs font-medium uppercase text-gray-500">Hours</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm">
+              <p class="text-2xl font-bold text-primary" id="mins">35</p>
+            </div>
+            <span class="text-xs font-medium uppercase text-gray-500">Mins</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-surface-light dark:bg-surface-dark shadow-sm">
+              <p class="text-2xl font-bold text-primary" id="secs">20</p>
+            </div>
+            <span class="text-xs font-medium uppercase text-gray-500">Secs</span>
+          </div>
+        </div>
+        
+        <a href="{{ section.settings.button_link | default: '#' }}" class="inline-flex h-12 min-w-[160px] items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white hover:bg-primary/90 transition-colors">
+          {{ section.settings.button_label }} - {{ section.settings.price }}
+        </a>
+      </div>
+      
+      <div class="flex-1 w-full max-w-md lg:max-w-full">
+        <div class="aspect-square relative rounded-2xl overflow-hidden shadow-xl bg-white">
+          <div class="absolute top-4 left-4 z-10 rounded-full bg-red-500 px-3 py-1 text-sm font-bold text-white shadow-md">{{ section.settings.discount_badge }}</div>
+          {%- if section.settings.image != blank -%}
+            <img 
+              src="{{ section.settings.image | image_url: width: 1000 }}" 
+              alt="{{ section.settings.title | escape }}"
+              class="h-full w-full object-cover"
+              width="1000"
+              height="1000"
+            >
+          {%- else -%}
+            <div class="h-full w-full bg-cover bg-center" style="background-image: url('{{ section.settings.fallback_image_url }}');"></div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  {% if section.settings.end_date != blank %}
+    const endTime = new Date("{{ section.settings.end_date }}").getTime();
+    const timer = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = endTime - now;
+      
+      if (distance < 0) {
+        clearInterval(timer);
+        return;
+      }
+      
+      document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+      document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+      document.getElementById("mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      document.getElementById("secs").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    }, 1000);
+  {% endif %}
+</script>
+
+{% schema %}
+{
+  "name": "Deal of the Day",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge Text",
+      "default": "Limited Time Offer"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Deal of the Day"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Grab our bestseller <span class=\"font-bold\">Meenakari Peacock Jhumkas</span> at an exclusive 40% discount. Hurry before the stock runs out!</p>"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price Display",
+      "default": "₹1,499"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product Image"
+    },
+    {
+      "type": "text",
+      "id": "fallback_image_url",
+      "label": "Fallback Image URL",
+      "default": "https://lh3.googleusercontent.com/aida-public/AB6AXuCN3Me0_tC6iP6DUHyV8BjmveXaMvDWL74uT7y1P81WDt0KtC3nfdnsz8xX_cgTgrppHu2GPMgDPmRdMcTJeZw5-uqhX69iOG2j2TL9BEczOrU9wUCrOjZdtUFegf9ImPQ2GY0MBlTFctBPsj0US5iFXx-b2B6rUExIXLYCLDeB_ZSy0o87lBmJApsXvUvPTyU8P4_Q0fCutYtjkowm1oPtVLu242PD4EhOjXRxuDMpB3Ee6lPvddDHVfluIrcdaE7XRpXQg4Q3ohEy"
+    },
+    {
+      "type": "text",
+      "id": "discount_badge",
+      "label": "Discount Badge",
+      "default": "-40%"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End Date (YYYY-MM-DD)",
+      "default": "2025-12-31"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Deal of the Day"
+    }
+  ]
+}
+{% endschema %}

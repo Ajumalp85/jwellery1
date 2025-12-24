@@ -1,0 +1,93 @@
+<div class="w-full py-12 lg:py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight text-[#0e191b] dark:text-white">{{ section.settings.title }}</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">{{ section.settings.subtitle }}</p>
+      </div>
+      {%- if section.settings.collection != blank -%}
+        <a class="hidden sm:inline-flex items-center gap-1 font-bold text-primary hover:text-primary/80" href="{{ section.settings.collection.url }}">
+          View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      {%- endif -%}
+    </div>
+    
+    <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 lg:grid-cols-4">
+      {%- assign products_to_show = section.settings.collection.products -%}
+      {%- if section.settings.collection == blank -%}
+        {%- comment -%} On-boarding content/Static placeholders {%- endcomment -%}
+        {%- render 'product-card', 
+            fallback_title: "Antique Gold Plated Bangles", 
+            fallback_price: 249900, 
+            fallback_image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAFfgiqimv05yvg_Hf2h-tvc-EXhwyLkr8555UOaKVMALzkCyEuML92FLrslT7Eltu6ER3n322dnIirRY521LmetsqIDH5sj9euAl9UD4gQMdfCWOQuMPolOfTXAjy8PON00ani4obeJSuVmOzo0cnjxK_WgiVSLdR0yt7UZgFn1zu3-gOEDI7NxpZfS492YlMw45YJ9SfY6CUZzpm1BZiKpUGfbu8vKiX5aobqqgiHE84Ett4F5Ajf4KoggKw5Bb2wn_Ly88ic0FSH" 
+        -%}
+        {%- render 'product-card', 
+            fallback_title: "Boho Oxidised Silver Choker", 
+            fallback_price: 89900, 
+            fallback_image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAYUWff-G8dXPdOEClQa3mAheB4C6wdw-tp_p_RrUv2SpsnUG99A_oINpS8BSoiZ-dOd5mJC_lDS6t6nY6RBndZPNfjqQOnxCODx32hCu5432V-r4gTFXL8z2u4KY7VD37FSHgQz8CuXa-IpcBm_F4M08syJ2cn5Qtr7PzwYRKsLYzbKnYNWZYaeCgFBuDprFGbS6Xeyg7_8EO6Bpkh297TP2RX8PzXQWbsdUPY10dcP39bY04w_OJKfOGGzClUEe55MmMN3wEQKJWT" 
+        -%}
+        {%- render 'product-card', 
+            fallback_title: "American Diamond Solitaire Studs", 
+            fallback_price: 59900, 
+            fallback_image: "https://lh3.googleusercontent.com/aida-public/AB6AXuClulFuLTiaqFHjmVUmHeTHxcBDAXwmGjDUpIHXK5hP0Vb7fo0TrHsQVFHEjZjCHqFyLVyFHnaa3vsDB_tkWhRPEErmAPz9WZKaCN5PptiWGAoxIMhsS4AEVmy0-O6FSfdKjHsrfoRbkvsDID46L-7IFJUJj9cM5lFmHBtkcQw7g1QDwAmEl653ymGvBs-_YzZFZ6k5WXUdvoAV18V_xHK6p5QfJf_7c5wK0q_CnAAsdlccJCSJfKwkwioiRtkA2YpxMYNyx1xkpH6Q" 
+        -%}
+        {%- render 'product-card', 
+            fallback_title: "Traditional Short Mangalsutra", 
+            fallback_price: 185000, 
+            fallback_image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaP0bTf4xWIghNoMD7Xo188K2FlKwWbBpHX8gQ4nARySQWpqPwqw-_xMsNg1B8xNg1B8xMHt5VGd1csgk-sSB-O4vrf4Dg8sfTESJTfwjnvfQdZrSmxPgjVvCw1pnLRGCoh3nk8nUfRbsrbUEGdF9U6A7q_mS7tpKUG9aSCuRiLNY7AHvUpXoejGlN3wHzehvLFIpDzOjcIr1fqURMOl9VG1ZL_rei2EAGgc6rpcU_BIwnbSubiJSnkOgEb5PJ6sMuUoubnLwlwjwZIp4PbU" 
+        -%}
+      {%- else -%}
+        {%- for product in section.settings.collection.products limit: section.settings.limit -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+    
+    {%- if section.settings.collection != blank -%}
+      <div class="mt-8 flex justify-center sm:hidden">
+        <a href="{{ section.settings.collection.url }}" class="inline-flex h-10 items-center justify-center rounded-lg border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          View All Products
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Fresh from the Karigars"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Latest additions to our exclusive catalogue"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 12,
+      "step": 4,
+      "label": "Products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products"
+    }
+  ]
+}
+{% endschema %}
